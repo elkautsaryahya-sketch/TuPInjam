@@ -124,17 +124,30 @@ async function loadHome() {
 
   const data = snap.data();
 
-  document.getElementById("stok-proyektor").innerText =
-    "Tersedia = " + data.proyektor;
+  setStok("proyektor", data.proyektor);
+  setStok("hdmi", data.hdmi);
+  setStok("kabel", data.kabel);
+  setStok("laptop", data.laptop);
+}
 
-  document.getElementById("stok-hdmi").innerText =
-    "Tersedia = " + data.hdmi;
+function setStok(id, jumlah) {
+  const el = document.getElementById("stok-" + id);
+  el.innerText = "Tersedia = " + jumlah;
 
-  document.getElementById("stok-kabel").innerText =
-    "Tersedia = " + data.kabel;
+  if (jumlah <= 0) {
+    el.style.background = "#ff4d4d";
+    el.style.color = "white";
+  } else if (jumlah <= 2) {
+    el.style.background = "#ffc107";
+    el.style.color = "black";
+  } else {
+    el.style.background = "#28a745";
+    el.style.color = "white";
+  }
 
-  document.getElementById("stok-laptop").innerText =
-    "Tersedia = " + data.laptop;
+  el.style.padding = "4px 10px";
+  el.style.borderRadius = "20px";
+  el.style.display = "inline-block";
 }
 </script>
 <!-- JS PALING BAWAH -->
@@ -143,5 +156,6 @@ async function loadHome() {
 </body>
 
 </html>
+
 
 
