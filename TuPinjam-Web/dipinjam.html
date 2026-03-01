@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dipinjam | TuPinjam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="app-page">
+
+<div class="app-header-wrapper">
+    <header class="app-header">
+        <img src="logoheader.png" class="header-logo">
+
+        <div class="stat-row">
+            <div class="stat-box biru">
+                <h2 id="totalAlat">0</h2>
+                <p>Total</p>
+            </div>
+            <div class="stat-box hijau">
+                <h2 id="totalTersedia">0</h2>
+                <p>Tersedia</p>
+            </div>
+            <div class="stat-box merah">
+                <h2 id="totalDipinjam">0</h2>
+                <p>Sedang dipakai</p>
+            </div>
+        </div>
+    </header>
+</div>
+
+<div class="dipinjam-container">
+    <h3 class="status-title">STATUS</h3>
+    <div id="listDipinjam"></div>
+</div>
+
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-link">
+        <div class="nav">🏠<span>Home</span></div>
+    </a>
+
+    <a href="dipinjam.html" class="nav-link">
+        <div class="nav active">📦<span>Dipinjam</span></div>
+    </a>
+
+    <a href="riwayat.html" class="nav-link">
+        <div class="nav">🕒<span>Riwayat</span></div>
+    </a>
+
+    <a href="pengaturan.html" class="nav-link">
+        <div class="nav">⚙️<span>Pengaturan</span></div>
+    </a>
+</nav>
+
+<!-- SATU SCRIPT SAJA -->
+<script type="module" src="js/dipinjam.js"></script>
+
+</body>
+</html>

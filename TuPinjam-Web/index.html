@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Login | TuPinjam</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/login.css">
+
+</head>
+
+<body>
+
+<div class="login-card">
+  
+
+  <img src="logo.png" class="login-logo" alt="TuPinjam Logo">
+
+
+  <h2>Login TuPinjam</h2>
+
+  <div class="input-group">
+    <label>Nama Lengkap</label>
+    <input type="text" id="nama">
+  </div>
+
+  <div class="input-group">
+    <label>Kelas</label>
+    <input type="text" id="kelas">
+  </div>
+
+  <div class="input-group">
+    <label>NIS</label>
+    <input type="number" id="nis">
+  </div>
+
+  <button class="btn-login" id="loginBtn">Masuk</button>
+
+  <div class="footer-text">
+    Sistem peminjaman alat KBM
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
+  authDomain: "tupinjam-39c42.firebaseapp.com",
+  projectId: "tupinjam-39c42",
+  storageBucket: "tupinjam-39c42.firebasestorage.app",
+  messagingSenderId: "410564688322",
+  appId: "1:410564688322:web:187157e3a6a52567f83e5b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+
+  const nama = document.getElementById("nama").value;
+  const kelas = document.getElementById("kelas").value;
+  const nis = document.getElementById("nis").value;
+
+  if (!nama || !kelas || !nis) {
+    alert("Lengkapi semua data!");
+    return;
+  }
+
+  try {
+    // login anonymous (buat session)
+    const userCredential = await signInAnonymously(auth);
+    const uid = userCredential.user.uid;
+
+    // simpan data ke Firestore pakai UID
+    await setDoc(doc(db, "users", uid), {
+      nama: nama,
+      kelas: kelas,
+      nis: nis
+    });
+
+    window.location.href = "home.html";
+
+  } catch (error) {
+    console.error(error);
+    alert("Login gagal");
+  }
+
+});
+</script>
+
+</body>
+</html>
