@@ -107,11 +107,20 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // 🔒 Proteksi halaman
+let checked = false;
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     loadHome();
   } else {
-    window.location.href = "index.html";
+    if (!checked) {
+      checked = true;
+      setTimeout(() => {
+        if (!auth.currentUser) {
+          window.location.replace("index.html");
+        }
+      }, 1000);
+    }
   }
 });
 
@@ -163,4 +172,5 @@ window.konfirmasiPinjam = async function(alatKey) {
  <script src="js/home.js"></script> 
 
 </body>
+
 </html>
