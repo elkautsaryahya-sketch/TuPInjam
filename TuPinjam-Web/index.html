@@ -27,18 +27,20 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
+import {
+  getAuth,
+  GoogleAuthProvider,
   signInWithRedirect,
-  onAuthStateChanged 
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
   authDomain: "tupinjam-39c42.firebaseapp.com",
   projectId: "tupinjam-39c42",
-  storageBucket: "tupinjam-39c42.firebasestorage.app",
+  storageBucket: "tupinjam-39c42.appspot.com",
   messagingSenderId: "410564688322",
   appId: "1:410564688322:web:187157e3a6a52567f83e5b"
 };
@@ -47,20 +49,26 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// 🔥 Paksa session disimpan
+setPersistence(auth, browserLocalPersistence);
+
 // tombol login
 document.getElementById("btnLogin").addEventListener("click", () => {
   signInWithRedirect(auth, provider);
 });
 
-// INI YANG PALING PENTING
+// 🔥 Delay kecil supaya WebView sempat restore session
 onAuthStateChanged(auth, (user) => {
+  console.log("AUTH STATE:", user);
   if (user) {
-    console.log("User detected:", user.email);
-    window.location.replace("home.html");
+    setTimeout(() => {
+      window.location.replace("home.html");
+    }, 500);
   }
 });
 </script>
 
 </body>
 </html>
+
 
