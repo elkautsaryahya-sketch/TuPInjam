@@ -28,11 +28,10 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
-    getAuth, 
-    GoogleAuthProvider, 
-    signInWithRedirect,
-    getRedirectResult,
-    onAuthStateChanged 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithRedirect,
+  onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -48,31 +47,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-provider.setCustomParameters({
-  prompt: "select_account"
-});
-
-// 🔥 Tombol login (pakai redirect, bukan popup)
+// tombol login
 document.getElementById("btnLogin").addEventListener("click", () => {
   signInWithRedirect(auth, provider);
 });
 
-// 🔥 Handle hasil redirect setelah balik dari Google
-getRedirectResult(auth)
-  .then((result) => {
-    if (result?.user) {
-      console.log("Redirect login success:", result.user.email);
-      window.location.replace("home.html");
-    }
-  })
-  .catch((error) => {
-    console.error("Redirect error:", error);
-    alert(error.message);
-  });
-
-// 🔥 Kalau sudah login sebelumnya
+// INI YANG PALING PENTING
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    console.log("User detected:", user.email);
     window.location.replace("home.html");
   }
 });
@@ -80,3 +63,4 @@ onAuthStateChanged(auth, (user) => {
 
 </body>
 </html>
+
