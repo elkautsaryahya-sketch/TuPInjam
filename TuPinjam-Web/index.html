@@ -31,9 +31,9 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithRedirect,
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence
+  getRedirectResult,
+  browserLocalPersistence,
+  setPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -49,26 +49,32 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// 🔥 Paksa session disimpan
-setPersistence(auth, browserLocalPersistence);
+// paksa persistence
+await setPersistence(auth, browserLocalPersistence);
 
 // tombol login
 document.getElementById("btnLogin").addEventListener("click", () => {
   signInWithRedirect(auth, provider);
 });
 
-// 🔥 Delay kecil supaya WebView sempat restore session
-onAuthStateChanged(auth, (user) => {
-  console.log("AUTH STATE:", user);
-  if (user) {
-    setTimeout(() => {
-      window.location.replace("home.html");
-    }, 500);
+// 🔥 HANDLE REDIRECT RESULT
+getRedirectResult(auth).then((result) => {
+  if (result?.user) {
+    console.log("Redirect success:", result.user.email);
+    window.location.href = "home.html";
   }
+}).catch((error) => {
+  console.log("Redirect error:", error);
 });
+
+// 🔥 Backup check (kalau session sudah ada)
+if (auth.currentUser) {
+  window.location.href = "home.html";
+}
 </script>
 
 </body>
 </html>
+
 
 
