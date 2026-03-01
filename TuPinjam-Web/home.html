@@ -106,23 +106,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 🔒 Proteksi halaman
-let checked = false;
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loadHome();
-  } else {
-    if (!checked) {
-      checked = true;
-      setTimeout(() => {
-        if (!auth.currentUser) {
-          window.location.replace("index.html");
-        }
-      }, 1000);
-    }
-  }
-});
 
 // 📥 Ambil stok dari Firestore
 async function loadHome() {
@@ -174,3 +158,4 @@ window.konfirmasiPinjam = async function(alatKey) {
 </body>
 
 </html>
+
