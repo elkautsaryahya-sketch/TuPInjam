@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | TuPinjam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+
+    <div class="login-box">
+        <img src="logo.png" alt="TuPinjam Logo" class="login-logo">
+
+        <h2>TuPinjam</h2>
+        <p>Kelola alat KBM dengan praktis</p>
+
+        <button type="button" class="btn-login" id="btnLogin">
+            <span class="icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+            </span>
+            Masuk dengan Google
+        </button>
+
+        <div style="margin:12px 0; color:#6b7280;">Atau</div>
+        <a href="#">Buat akun baru</a>
+    </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { 
+    getAuth, 
+    GoogleAuthProvider, 
+    signInWithPopup, 
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
+  authDomain: "tupinjam-39c42.firebaseapp.com",
+  projectId: "tupinjam-39c42",
+  storageBucket: "tupinjam-39c42.firebasestorage.app",
+  messagingSenderId: "410564688322",
+  appId: "1:410564688322:web:187157e3a6a52567f83e5b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+provider.setCustomParameters({
+  prompt: "select_account"
+});
+
+// Tombol login
+document.getElementById("btnLogin").addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Login gagal. Cek console.");
+  }
+});
+
+// Redirect kalau sudah login
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("User login:", user.email);
+    window.location.href = "home.html";
+  }
+});
+</script>
+
+</body>
+</html>

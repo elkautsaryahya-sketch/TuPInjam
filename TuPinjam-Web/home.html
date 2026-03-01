@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Home | TuPinjam</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="app-page">
+
+<!-- HEADER -->
+<div class="app-header-wrapper">
+    <header class="app-header">
+        <img src="logoheader.png" class="header-logo">
+        <div class="search-box">
+            <input type="text" placeholder="Cari Alat">
+            <span class="search-icon">🔍</span>
+        </div>
+    </header>
+</div>
+
+<!-- CATEGORY -->
+<div class="category-scroll">
+    <button class="category active">Semua</button>
+    <button class="category">Proyektor</button>
+    <button class="category">HDMI</button>
+    <button class="category">Kabel</button>
+    <button class="category">Laptop</button>
+</div>
+
+<!-- LIST ALAT -->
+<div class="alat-list">
+
+<a href="pinjam.html?alat=proyektor" class="alat-card" data-alat="proyektor">
+    <img src="assets/proyektor.png" class="alat-img">
+    <div class="alat-info">
+        <h4>Proyektor</h4>
+        <span class="stok" id="stok-proyektor"></span>
+    </div>
+    <span class="arrow">›</span>
+</a>
+
+<a href="pinjam.html?alat=hdmi" class="alat-card" data-alat="hdmi">
+    <img src="assets/hdmi.png" class="alat-img">
+    <div class="alat-info">
+        <h4>HDMI</h4>
+        <span class="stok" id="stok-hdmi"></span>
+    </div>
+    <span class="arrow">›</span>
+</a>
+
+<a href="pinjam.html?alat=kabel" class="alat-card" data-alat="kabel">
+    <img src="assets/kabel.png" class="alat-img">
+    <div class="alat-info">
+        <h4>Kabel Roll</h4>
+        <span class="stok" id="stok-kabel"></span>
+    </div>
+    <span class="arrow">›</span>
+</a>
+
+<a href="pinjam.html?alat=laptop" class="alat-card" data-alat="laptop">
+    <img src="assets/laptop.png" class="alat-img">
+    <div class="alat-info">
+        <h4>Laptop</h4>
+        <span class="stok" id="stok-laptop"></span>
+    </div>
+    <span class="arrow">›</span>
+</a>
+
+</div>
+
+<p class="home-tagline">Kelola alat KBM dengan praktis</p>
+
+<!-- NAVBAR -->
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-link">
+        <div class="nav active">🏠<span>Home</span></div>
+    </a>
+    <a href="dipinjam.html" class="nav-link">
+        <div class="nav">📦<span>Dipinjam</span></div>
+    </a>
+    <a href="riwayat.html" class="nav-link">
+        <div class="nav">🕒<span>Riwayat</span></div>
+    </a>
+    <a href="pengaturan.html" class="nav-link">
+        <div class="nav">⚙️<span>Pengaturan</span></div>
+    </a>
+</nav>
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
+  authDomain: "tupinjam-39c42.firebaseapp.com",
+  projectId: "tupinjam-39c42",
+  storageBucket: "tupinjam-39c42.appspot.com",
+  messagingSenderId: "410564688322",
+  appId: "1:410564688322:web:187157e3a6a52567f83e5b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 🔒 Proteksi halaman
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadHome();
+  } else {
+    window.location.href = "index.html";
+  }
+});
+
+// 📥 Ambil stok dari Firestore
+async function loadHome() {
+  const alatRef = doc(db, "alat", "stok");
+  const snap = await getDoc(alatRef);
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  document.getElementById("stok-proyektor").innerText =
+    "Tersedia = " + data.proyektor;
+
+  document.getElementById("stok-hdmi").innerText =
+    "Tersedia = " + data.hdmi;
+
+  document.getElementById("stok-kabel").innerText =
+    "Tersedia = " + data.kabel;
+
+  document.getElementById("stok-laptop").innerText =
+    "Tersedia = " + data.laptop;
+}
+
+// 📦 Pinjam alat
+window.konfirmasiPinjam = async function(alatKey) {
+  const alatRef = doc(db, "alat", "stok");
+  const snap = await getDoc(alatRef);
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  if (data[alatKey] <= 0) {
+    alert("Stok habis!");
+    return;
+  }
+
+  await updateDoc(alatRef, {
+    [alatKey]: data[alatKey] - 1
+  });
+
+  alert("Berhasil meminjam");
+  loadHome();
+}
+</script>
+<!-- JS PALING BAWAH -->
+ <script src="js/home.js"></script> 
+
+</body>
+</html>

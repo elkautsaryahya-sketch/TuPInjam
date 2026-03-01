@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pengaturan | TuPinjam</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="app-page pengaturan-page">
+
+  <!-- FORM LENGKAPI PROFIL -->
+  <div id="formProfil" class="pengaturan-top">
+    <div class="profile-form">
+      <h3>Lengkapi Profil</h3>
+
+      <input type="text" id="inputNama" placeholder="Nama Lengkap">
+      <input type="text" id="inputKelas" placeholder="Kelas">
+      <input type="number" id="inputNis" placeholder="NIS">
+
+      <button onclick="simpanProfil()" class="btn-simpan">
+        Simpan Profil
+      </button>
+    </div>
+  </div>
+
+  
+  <!-- CARD PROFIL -->
+<div id="profileView" class="pengaturan-top hidden">
+  <div class="profile-card">
+
+    <!-- Tombol Edit Icon -->
+    <button class="btn-edit-icon" onclick="editProfil()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" fill="#374151"/>
+      </svg>
+    </button>
+
+    <div>
+      <h4 id="profileNama"></h4>
+      <p id="profileKelas"></p>
+      <small id="profileNis"></small>
+    </div>
+
+  </div>
+</div>
+  <!-- LOGO SECTION -->
+  <div class="pengaturan-middle hidden" id="logoSection">
+    <div class="logo-card">
+      <img src="logo.png" class="logo-center">
+      <p class="app-version">TuPinjam v1.0</p>
+    </div>
+  </div>
+
+  <!-- LOGOUT -->
+  <div class="pengaturan-bottom hidden" id="logoutSection">
+    <button class="btn-logout" onclick="logout()">Log Out</button>
+  </div>
+
+  <!-- NAVBAR -->
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-link">
+        <div class="nav">🏠<span>Home</span></div>
+    </a>
+    <a href="dipinjam.html" class="nav-link">
+        <div class="nav">📦<span>Dipinjam</span></div>
+    </a>
+    <a href="riwayat.html" class="nav-link">
+        <div class="nav">🕒<span>Riwayat</span></div>
+    </a>
+    <a href="pengaturan.html" class="nav-link">
+        <div class="nav active">⚙️<span>Pengaturan</span></div>
+    </a>
+</nav>
+
+  <!-- WAJIB MODULE & CUMA SATU SCRIPT -->
+  <script type="module" src="js/pengaturan.js"></script>
+
+</body>
+</html>
