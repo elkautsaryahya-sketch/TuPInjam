@@ -7,7 +7,8 @@ import {
   updateDoc, 
   addDoc, 
   collection, 
-  serverTimestamp 
+  serverTimestamp,
+  increment
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ================= FIREBASE CONFIG =================
@@ -70,13 +71,17 @@ onAuthStateChanged(auth, async (user) => {
   // ================= AUTOFILL =================
   inputNama.value = profil.nama;
   inputKelas.value = profil.kelas;
-
   inputNama.readOnly = true;
   inputKelas.readOnly = true;
 
   // ================= AMBIL STOK =================
   const alatRef = doc(db, "alat", "stok");
   const snap = await getDoc(alatRef);
+
+  if (!snap.exists()) {
+    alert("Data stok tidak ditemukan!");
+    return;
+  }
 
   const data = snap.data();
 
@@ -97,35 +102,42 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    const latestSnap = await getDoc(alatRef);
-    const latestData = latestSnap.data();
+    try {
 
-    if (latestData[alat] <= 0) {
-      alert("Stok habis!");
-      return;
+      // cek stok terbaru
+      const latestSnap = await getDoc(alatRef);
+      const latestData = latestSnap.data();
+
+      if (latestData[alat] <= 0) {
+        alert("Stok habis!");
+        return;
+      }
+
+      // kurangi stok
+      await updateDoc(alatRef, {
+        [alat]: increment(-1)
+      });
+
+      // simpan riwayat peminjaman
+      await addDoc(collection(db, "peminjaman"), {
+        alat: alat,
+        nama: profil.nama,
+        kelas: profil.kelas,
+        nis: profil.nis,
+        tanggal: inputTanggal.value,
+        userId: user.uid,
+        status: "Dipinjam",
+        createdAt: serverTimestamp()
+      });
+
+      alert("Peminjaman berhasil!");
+      window.location.href = "dipinjam.html";
+
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat meminjam.");
     }
 
-   import { increment } from 
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-await updateDoc(alatRef, {
-  [alat]: increment(-1)
-});
-
-    await addDoc(collection(db, "peminjaman"), {
-      alat: alat,
-      nama: profil.nama,
-      kelas: profil.kelas,
-      nis: profil.nis,
-      tanggal: inputTanggal.value,
-      userId: user.uid,
-      status: "Dipinjam",
-      createdAt: serverTimestamp()
-    });
-
-    alert("Peminjaman berhasil!");
-    window.location.href = "dipinjam.html";
   };
-
 
 });
