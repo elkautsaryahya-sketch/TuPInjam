@@ -97,7 +97,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
   authDomain: "tupinjam-39c42.firebaseapp.com",
   projectId: "tupinjam-39c42",
-  storageBucket: "tupinjam-39c42.appspot.com",
+  storageBucket: "tupinjam-39c42.firebasestorage.app",
   messagingSenderId: "410564688322",
   appId: "1:410564688322:web:187157e3a6a52567f83e5b"
 };
@@ -106,7 +106,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// 🔒 Proteksi halaman
+const user = JSON.parse(localStorage.getItem("user"));
 
+if (!user) {
+  window.location.href = "index.html";
+}
 
 // 📥 Ambil stok dari Firestore
 async function loadHome() {
@@ -156,6 +161,4 @@ window.konfirmasiPinjam = async function(alatKey) {
  <script src="js/home.js"></script> 
 
 </body>
-
 </html>
-
