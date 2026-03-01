@@ -91,7 +91,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
@@ -110,8 +110,10 @@ const db = getFirestore(app);
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "index.html";
+  } else {
+    loadHome();
   }
-
+});
 
 // 📥 Ambil stok dari Firestore
 async function loadHome() {
@@ -134,28 +136,6 @@ async function loadHome() {
   document.getElementById("stok-laptop").innerText =
     "Tersedia = " + data.laptop;
 }
-
-// 📦 Pinjam alat
-window.konfirmasiPinjam = async function(alatKey) {
-  const alatRef = doc(db, "alat", "stok");
-  const snap = await getDoc(alatRef);
-
-  if (!snap.exists()) return;
-
-  const data = snap.data();
-
-  if (data[alatKey] <= 0) {
-    alert("Stok habis!");
-    return;
-  }
-
-  await updateDoc(alatRef, {
-    [alatKey]: data[alatKey] - 1
-  });
-
-  alert("Berhasil meminjam");
-  loadHome();
-}
 </script>
 <!-- JS PALING BAWAH -->
  <script src="js/home.js"></script> 
@@ -163,3 +143,4 @@ window.konfirmasiPinjam = async function(alatKey) {
 </body>
 
 </html>
+
