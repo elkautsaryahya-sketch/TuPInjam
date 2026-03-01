@@ -105,9 +105,12 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    await updateDoc(alatRef, {
-      [alat]: latestData[alat] - 1
-    });
+   import { increment } from 
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+await updateDoc(alatRef, {
+  [alat]: increment(-1)
+});
 
     await addDoc(collection(db, "peminjaman"), {
       alat: alat,
@@ -123,5 +126,6 @@ onAuthStateChanged(auth, async (user) => {
     alert("Peminjaman berhasil!");
     window.location.href = "dipinjam.html";
   };
+
 
 });
