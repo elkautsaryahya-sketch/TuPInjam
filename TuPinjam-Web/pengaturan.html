@@ -7,74 +7,104 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="app-page pengaturan-page">
+<body class="app-page">
 
-  <!-- FORM LENGKAPI PROFIL -->
-  <div id="formProfil" class="pengaturan-top">
-    <div class="profile-form">
-      <h3>Lengkapi Profil</h3>
+  <div class="container">
 
-      <input type="text" id="inputNama" placeholder="Nama Lengkap">
-      <input type="text" id="inputKelas" placeholder="Kelas">
-      <input type="number" id="inputNis" placeholder="NIS">
+    <!-- PROFILE CARD -->
+    <div class="card profile-card">
+      <h2>Profil Saya</h2>
 
-      <button onclick="simpanProfil()" class="btn-simpan">
-        Simpan Profil
+      <div class="profile-item">
+        <span>Nama</span>
+        <strong id="showNama">...</strong>
+      </div>
+
+      <div class="profile-item">
+        <span>Kelas</span>
+        <strong id="showKelas">...</strong>
+      </div>
+
+      <div class="profile-item">
+        <span>NIS</span>
+        <strong id="showNis">...</strong>
+      </div>
+
+      <button id="btnLogout" class="btn-danger">
+        Logout
       </button>
     </div>
-  </div>
-
-  
-  <!-- CARD PROFIL -->
-<div id="profileView" class="pengaturan-top hidden">
-  <div class="profile-card">
-
-    <!-- Tombol Edit Icon -->
-    <button class="btn-edit-icon" onclick="editProfil()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z" fill="#374151"/>
-      </svg>
-    </button>
-
-    <div>
-      <h4 id="profileNama"></h4>
-      <p id="profileKelas"></p>
-      <small id="profileNis"></small>
-    </div>
 
   </div>
-</div>
-  <!-- LOGO SECTION -->
-  <div class="pengaturan-middle hidden" id="logoSection">
-    <div class="logo-card">
-      <img src="logo.png" class="logo-center">
-      <p class="app-version">TuPinjam v1.0</p>
-    </div>
-  </div>
 
-  <!-- LOGOUT -->
-  <div class="pengaturan-bottom hidden" id="logoutSection">
-    <button class="btn-logout" onclick="logout()">Log Out</button>
-  </div>
 
   <!-- NAVBAR -->
-<nav class="bottom-nav">
+  <nav class="bottom-nav">
     <a href="home.html" class="nav-link">
-        <div class="nav">🏠<span>Home</span></div>
+      <div class="nav">🏠<span>Home</span></div>
     </a>
     <a href="dipinjam.html" class="nav-link">
-        <div class="nav">📦<span>Dipinjam</span></div>
+      <div class="nav">📦<span>Dipinjam</span></div>
     </a>
     <a href="riwayat.html" class="nav-link">
-        <div class="nav">🕒<span>Riwayat</span></div>
+      <div class="nav">🕒<span>Riwayat</span></div>
     </a>
     <a href="pengaturan.html" class="nav-link">
-        <div class="nav active">⚙️<span>Pengaturan</span></div>
+      <div class="nav active">⚙️<span>Pengaturan</span></div>
     </a>
-</nav>
+  </nav>
 
-  <!-- WAJIB MODULE & CUMA SATU SCRIPT -->
-  <script type="module" src="js/pengaturan.js"></script>
+
+  <!-- FIREBASE SCRIPT -->
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyBKBlwXashCr76gEsH_b0w8FD-BJKosQ90",
+  authDomain: "tupinjam-39c42.firebaseapp.com",
+  projectId: "tupinjam-39c42",
+  storageBucket: "tupinjam-39c42.firebasestorage.app",
+  messagingSenderId: "410564688322",
+  appId: "1:410564688322:web:187157e3a6a52567f83e5b"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // cek user login
+    onAuthStateChanged(auth, async (user) => {
+
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const uid = user.uid;
+      const snap = await getDoc(doc(db, "users", uid));
+
+      if (!snap.exists()) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const data = snap.data();
+
+      document.getElementById("showNama").innerText = data.nama;
+      document.getElementById("showKelas").innerText = data.kelas;
+      document.getElementById("showNis").innerText = data.nis;
+    });
+
+    // logout
+    document.getElementById("btnLogout").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+
+  </script>
 
 </body>
 </html>
