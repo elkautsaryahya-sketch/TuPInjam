@@ -30,7 +30,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { 
     getAuth, 
     GoogleAuthProvider, 
-    signInWithPopup, 
+    signInWithRedirect,
+    getRedirectResult,
     onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -51,21 +52,28 @@ provider.setCustomParameters({
   prompt: "select_account"
 });
 
-// Tombol login
-document.getElementById("btnLogin").addEventListener("click", async () => {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (error) {
-    console.error("Login error:", error);
-    alert("Login gagal. Cek console.");
-  }
+// 🔥 Tombol login (pakai redirect, bukan popup)
+document.getElementById("btnLogin").addEventListener("click", () => {
+  signInWithRedirect(auth, provider);
 });
 
-// Redirect kalau sudah login
+// 🔥 Handle hasil redirect setelah balik dari Google
+getRedirectResult(auth)
+  .then((result) => {
+    if (result?.user) {
+      console.log("Redirect login success:", result.user.email);
+      window.location.replace("home.html");
+    }
+  })
+  .catch((error) => {
+    console.error("Redirect error:", error);
+    alert(error.message);
+  });
+
+// 🔥 Kalau sudah login sebelumnya
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("User login:", user.email);
-    window.location.href = "home.html";
+    window.location.replace("home.html");
   }
 });
 </script>
